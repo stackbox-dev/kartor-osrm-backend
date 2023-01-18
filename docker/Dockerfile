@@ -22,8 +22,6 @@ WORKDIR /src
 
 RUN NPROC=${BUILD_CONCURRENCY:-$(nproc)} && \
     echo "Building OSRM ${DOCKER_TAG}" && \
-    git show --format="%H" | head -n1 > /opt/OSRM_GITSHA && \
-    echo "Building OSRM gitsha $(cat /opt/OSRM_GITSHA)" && \
     mkdir -p build && \
     cd build && \
     BUILD_TYPE="Release" && \
