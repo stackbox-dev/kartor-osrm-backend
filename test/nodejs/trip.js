@@ -289,6 +289,7 @@ test('trip: service combinations that are not implemented', function(assert) {
 });
 
 test('trip: fixed start and end combinations', function(assert) {
+    assert.plan(21);
     var osrm = new OSRM(data_path);
 
     var options = {
@@ -350,8 +351,6 @@ test('trip: fixed start and end combinations', function(assert) {
     options.source = 'any';
     options.destination = 'any';
     roundtripChecks(options);
-
-    assert.end();
 });
 
 test('trip: trip in Monaco without motorways', function(assert) {
@@ -368,3 +367,65 @@ test('trip: trip in Monaco without motorways', function(assert) {
     });
 });
 
+
+test('trip: throws on disabled geometry', function (assert) {
+    assert.plan(1);
+    var osrm = new OSRM({'path': data_path, 'disable_feature_dataset': ['ROUTE_GEOMETRY']});
+    var options = {
+        coordinates: three_test_coordinates.concat(three_test_coordinates),
+    };
+    osrm.trip(options, function(err, route) {
+        console.log(err)
+        assert.match(err.message, /DisabledDatasetException/);
+    });
+});
+
+test('trip: ok on disabled geometry', function (assert) {
+    assert.plan(2);
+    var osrm = new OSRM({'path': data_path, 'disable_feature_dataset': ['ROUTE_GEOMETRY']});
+    var options = {
+        steps: false,
+        overview: 'false',
+        annotations: false,
+        skip_waypoints: true,
+        coordinates: three_test_coordinates.concat(three_test_coordinates),
+    };
+    osrm.trip(options, function(err, response) {
+        assert.ifError(err);
+        assert.equal(response.trips.length, 1);
+    });
+});
+
+test('trip: throws on disabled steps', function (assert) {
+    assert.plan(1);
+    var osrm = new OSRM({'path': data_path, 'disable_feature_dataset': ['ROUTE_STEPS']});
+    var options = {
+        steps: true,
+        coordinates: three_test_coordinates.concat(three_test_coordinates),
+    };
+    osrm.trip(options, function(err, route) {
+        console.log(err)
+        assert.match(err.message, /DisabledDatasetException/);
+    });
+});
+
+test('trip: ok on disabled steps', function (assert) {
+    assert.plan(8);
+    var osrm = new OSRM({'path': data_path, 'disable_feature_dataset': ['ROUTE_STEPS']});
+    var options = {
+        steps: false,
+        overview: 'simplified',
+        annotations: true,
+        coordinates: three_test_coordinates.concat(three_test_coordinates),
+    };
+    osrm.trip(options, function(err, response) {
+        assert.ifError(err);
+        assert.ok(response.waypoints);
+        assert.ok(response.trips);
+        assert.equal(response.trips.length, 1);
+        assert.ok(response.trips[0].geometry, "trip has geometry");
+        assert.ok(response.trips[0].legs, "trip has legs");
+        assert.notok(response.trips[0].legs.every(l => { return l.steps.length > 0; }), 'every leg has steps');
+        assert.ok(response.trips[0].legs.every(l => { return l.annotation;}), 'every leg has annotations');
+    });
+});

@@ -11,9 +11,6 @@
 #include <cstdlib>
 
 #include <algorithm>
-#include <memory>
-#include <string>
-#include <vector>
 
 namespace osrm::engine::plugins
 {
@@ -25,7 +22,9 @@ class ViaRoutePlugin final : public BasePlugin
     const int max_alternatives;
 
   public:
-    explicit ViaRoutePlugin(int max_locations_viaroute, int max_alternatives);
+    explicit ViaRoutePlugin(int max_locations_viaroute,
+                            int max_alternatives,
+                            std::optional<double> default_radius);
 
     Status HandleRequest(const RoutingAlgorithmsInterface &algorithms,
                          const api::RouteParameters &route_parameters,

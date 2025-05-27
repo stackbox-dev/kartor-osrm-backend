@@ -7,7 +7,6 @@
 #include "util/vector_view.hpp"
 
 #include <array>
-#include <fstream>
 #include <utility>
 
 namespace osrm::util
@@ -64,7 +63,8 @@ template <unsigned BLOCK_SIZE, storage::Ownership Ownership> class RangeTable
     // construct table from length vector
     template <typename VectorT> explicit RangeTable(const VectorT &lengths)
     {
-        const unsigned number_of_blocks = [&lengths]() {
+        const unsigned number_of_blocks = [&lengths]()
+        {
             unsigned num = (lengths.size() + 1) / (BLOCK_SIZE + 1);
             if ((lengths.size() + 1) % (BLOCK_SIZE + 1) != 0)
             {
@@ -79,10 +79,10 @@ template <unsigned BLOCK_SIZE, storage::Ownership Ownership> class RangeTable
         unsigned last_length = 0;
         unsigned lengths_prefix_sum = 0;
         unsigned block_idx = 0;
-        unsigned block_counter = 0;
         BlockT block;
 #ifndef BOOST_ASSERT_IS_VOID
         unsigned block_sum = 0;
+        unsigned block_counter = 0;
 #endif
         for (const unsigned l : lengths)
         {
@@ -109,7 +109,9 @@ template <unsigned BLOCK_SIZE, storage::Ownership Ownership> class RangeTable
             if (BLOCK_SIZE == block_idx)
             {
                 diff_blocks.push_back(block);
+#ifndef BOOST_ASSERT_IS_VOID
                 block_counter++;
+#endif
             }
 
             // we can only store strings with length 255

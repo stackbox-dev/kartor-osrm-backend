@@ -1,6 +1,5 @@
 #include "extractor/files.hpp"
 #include "extractor/packed_osm_ids.hpp"
-#include "extractor/tarjan_scc.hpp"
 
 #include "util/coordinate.hpp"
 #include "util/coordinate_calculation.hpp"
@@ -8,9 +7,9 @@
 #include "util/fingerprint.hpp"
 #include "util/log.hpp"
 #include "util/static_graph.hpp"
+#include "util/tarjan_scc.hpp"
 #include "util/typedefs.hpp"
 
-#include <boost/filesystem.hpp>
 #include <boost/iterator/function_output_iterator.hpp>
 
 #include <tbb/parallel_sort.h>
@@ -19,8 +18,8 @@
 #include <cstdlib>
 
 #include <algorithm>
+#include <filesystem>
 #include <fstream>
-#include <memory>
 #include <ostream>
 #include <string>
 #include <vector>
@@ -118,7 +117,7 @@ int main(int argc, char *argv[])
     const std::string inpath{argv[1]};
     const std::string outpath{argv[2]};
 
-    if (boost::filesystem::exists(outpath))
+    if (std::filesystem::exists(outpath))
     {
         util::Log(logWARNING) << "Components file " << outpath << " already exists";
         return EXIT_FAILURE;
@@ -145,7 +144,7 @@ int main(int argc, char *argv[])
 
     util::Log() << "Starting SCC graph traversal";
 
-    extractor::TarjanSCC<tools::TarjanGraph> tarjan{*graph};
+    util::TarjanSCC<tools::TarjanGraph> tarjan{*graph};
     tarjan.Run();
 
     util::Log() << "Identified: " << tarjan.GetNumberOfComponents() << " components";

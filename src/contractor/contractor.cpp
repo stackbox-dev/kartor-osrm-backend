@@ -1,7 +1,6 @@
 #include "contractor/contractor.hpp"
 #include "contractor/contract_excludable_graph.hpp"
 #include "contractor/contracted_edge_container.hpp"
-#include "contractor/crc32_processor.hpp"
 #include "contractor/files.hpp"
 #include "contractor/graph_contractor.hpp"
 #include "contractor/graph_contractor_adaptors.hpp"
@@ -27,14 +26,10 @@
 #include "util/typedefs.hpp"
 
 #include <algorithm>
-#include <bitset>
 #include <cstdint>
-#include <fstream>
 #include <iterator>
-#include <memory>
 #include <vector>
 
-#include <boost/assert.hpp>
 #include <tbb/global_control.h>
 
 namespace osrm::contractor
@@ -44,18 +39,6 @@ int Contractor::Run()
 {
     tbb::global_control gc(tbb::global_control::max_allowed_parallelism,
                            config.requested_num_threads);
-
-    if (config.core_factor != 1.0)
-    {
-        util::Log(logWARNING)
-            << "Using core factor is deprecated and will be ignored. Falling back to CH.";
-        config.core_factor = 1.0;
-    }
-
-    if (config.use_cached_priority)
-    {
-        util::Log(logWARNING) << "Using cached priorities is deprecated and they will be ignored.";
-    }
 
     TIMER_START(preparing);
 

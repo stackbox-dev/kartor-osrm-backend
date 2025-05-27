@@ -4,7 +4,7 @@
 #include "server/api/base_parameters_grammar.hpp"
 #include "engine/api/route_parameters.hpp"
 
-#include <boost/spirit/include/phoenix.hpp>
+#include <boost/phoenix.hpp>
 #include <boost/spirit/include/qi.hpp>
 
 namespace osrm::server::api
@@ -54,8 +54,9 @@ struct RouteParametersGrammar : public BaseParametersGrammar<Iterator, Signature
 #endif
         using AnnotationsType = engine::api::RouteParameters::AnnotationsType;
 
-        const auto add_annotation = [](engine::api::RouteParameters &route_parameters,
-                                       AnnotationsType route_param) {
+        const auto add_annotation =
+            [](engine::api::RouteParameters &route_parameters, AnnotationsType route_param)
+        {
             route_parameters.annotations_type = route_parameters.annotations_type | route_param;
             route_parameters.annotations =
                 route_parameters.annotations_type != AnnotationsType::None;

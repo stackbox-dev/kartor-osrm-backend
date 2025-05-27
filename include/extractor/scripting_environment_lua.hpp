@@ -41,10 +41,10 @@ struct LuaScriptingContext final
     bool has_way_function = false;
     bool has_segment_function = false;
 
-    sol::function turn_function;
-    sol::function way_function;
-    sol::function node_function;
-    sol::function segment_function;
+    sol::protected_function turn_function;
+    sol::protected_function way_function;
+    sol::protected_function node_function;
+    sol::protected_function segment_function;
 
     int api_version = 4;
     sol::table profile_table;
@@ -70,7 +70,7 @@ class Sol2ScriptingEnvironment final : public ScriptingEnvironment
 
     explicit Sol2ScriptingEnvironment(
         const std::string &file_name,
-        const std::vector<boost::filesystem::path> &location_dependent_data_paths);
+        const std::vector<std::filesystem::path> &location_dependent_data_paths);
     ~Sol2ScriptingEnvironment() override = default;
 
     const ProfileProperties &GetProfileProperties() override;
