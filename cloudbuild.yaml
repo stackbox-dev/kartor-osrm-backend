@@ -19,7 +19,7 @@ steps:
     entrypoint: bash
     args:
       - "-c"
-      - "docker build -t ${_IMG}:$COMMIT_SHA -t ${_IMG}:latest --cache-from ${_IMG}:latest -f docker/Dockerfile ."
+      - "docker build -t ${_IMG}:$COMMIT_SHA -t ${_IMG}:latest --cache-from ${_IMG}:latest -f docker/Dockerfile.custom ."
   - id: push-image
     name: gcr.io/cloud-builders/docker
     entrypoint: bash
