@@ -5,20 +5,20 @@ ARG BUILD_CONCURRENCY
 RUN mkdir -p /src /opt && \
     apt-get update && \
     apt-get -y --no-install-recommends --no-install-suggests install \
-    ca-certificates \
-    cmake \
-    g++ \
-    gcc \
-    git \
-    libboost1.81-all-dev \
-    libbz2-dev \
-    liblua5.4-dev \
-    libtbb-dev \
-    libxml2-dev \
-    libzip-dev \
-    lua5.4 \
-    make \
-    pkg-config
+        ca-certificates \
+        cmake \
+        g++ \
+        gcc \
+        git \
+        libboost1.81-all-dev \
+        libbz2-dev \
+        liblua5.4-dev \
+        libtbb-dev \
+        libxml2-dev \
+        libzip-dev \
+        lua5.4 \
+        make \
+        pkg-config
 
 COPY . /src
 WORKDIR /src
@@ -52,15 +52,15 @@ COPY --from=builder /opt /opt
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends --no-install-suggests \
-    expat \
-    libboost-date-time1.81.0 \
-    libboost-iostreams1.81.0 \
-    libboost-program-options1.81.0 \
-    libboost-thread1.81.0 \
-    liblua5.4-0 \
-    libtbb12 && \
+        expat \
+        libboost-date-time1.81.0 \
+        libboost-iostreams1.81.0 \
+        libboost-program-options1.81.0 \
+        libboost-thread1.81.0 \
+        liblua5.4-0 \
+        libtbb12 && \
     rm -rf /var/lib/apt/lists/* && \
-    # Add /usr/local/lib to ldconfig to allow loading libraries from there
+# Add /usr/local/lib to ldconfig to allow loading libraries from there
     ldconfig /usr/local/lib
 
 RUN /usr/local/bin/osrm-extract --help && \
