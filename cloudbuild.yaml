@@ -1,0 +1,22 @@
+timeout: 1800s
+queueTtl: 300s
+options:
+  machineType: "E2_HIGHCPU_8"
+images:
+  - "${_IMG}:$COMMIT_SHA"
+substitutions:
+  _IMG: asia-docker.pkg.dev/sbx-ci-cd/private/osrm-backend
+steps:
+  - id: build-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    args:
+      - "-c"
+      - "docker build -t ${_IMG}:$COMMIT_SHA -f docker/Dockerfile-debian ."
+  - id: push-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    args:
+      - "-c"
+      - set -x;
+        docker push ${_IMG}:$COMMIT_SHA;
